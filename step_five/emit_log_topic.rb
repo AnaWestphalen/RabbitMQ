@@ -8,18 +8,18 @@ connection.start
 channel = connection.create_channel
 
 # Criação da exchange
-exchange = channel.direct('direct_logs')
+exchange = channel.topic('topic_logs')
 
-# Definição da chave do roteador
-# Severity, nesse caso, pode ser info, warning ou error.
-severity = ARGV.shift || 'info'
+# Definição da chave do roteador (routing_key)
+severity = ARGV.shift || 'anonymous.info'
 
 # Mensagem
 message = ARGV.empty? ? 'Hello World!' : ARGV.join(' ')
 
-# Dentro do parênteses está a msg a ser enviada usando uma exchange do tipo direct
+# Dentro do parênteses está a msg a ser enviada usando uma exchange do tipo topic
+# No terminal será possível visializar a routing_key seguida da msg
 exchange.publish(message, routing_key: severity)
-puts " [x] Sent #{message}"
+puts " [x] Sent #{severity}:#{message}"
 
 # Fechamento da conexão
 connection.close
